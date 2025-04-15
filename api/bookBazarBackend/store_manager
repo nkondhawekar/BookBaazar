@@ -69,7 +69,7 @@ def availability_metrics():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# 5. Competitor Benchmarking
+# Competitor Benchmarking
 @bp.route('/competitor-benchmark', methods=['GET'])
 def competitor_benchmark():
     sql = """
