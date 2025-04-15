@@ -4,7 +4,7 @@ from db import query
 
 bp = Blueprint('bookstore', __name__, url_prefix='/bookstore')
 
-# 1. Trending Books Dashboard: View which textbooks are listed, sold, or requested the most
+# Book Dashboard
 @bp.route('/trending-books', methods=['GET'])
 def trending_books():
     sql = """
@@ -24,7 +24,7 @@ def trending_books():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# 2. Price Trends Analysis: Get average resale prices for different textbooks
+# Price Trends 
 @bp.route('/price-trends', methods=['GET'])
 def price_trends():
     sql = """
@@ -39,7 +39,7 @@ def price_trends():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# 3. Seasonal Demand Insights: Analyze textbook demand by semester/season
+# Demand 
 @bp.route('/seasonal-demand', methods=['GET'])
 def seasonal_demand():
     sql = """
@@ -54,10 +54,9 @@ def seasonal_demand():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# 4. Book Availability Metrics: Determine how long textbooks stay listed before sale
+#Availability 
 @bp.route('/availability-metrics', methods=['GET'])
 def availability_metrics():
-    # This query is highly dependent on your schema – an example is provided.
     sql = """
       SELECT book_id, AVG(JULIANDAY(sold_date) - JULIANDAY(created_at)) AS avg_days_to_sell
       FROM listings
@@ -70,10 +69,9 @@ def availability_metrics():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# 5. Competitor Benchmarking: Compare bookstore-sold vs. student-sold textbook data
+# 5. Competitor Benchmarking
 @bp.route('/competitor-benchmark', methods=['GET'])
 def competitor_benchmark():
-    # Dummy query for example purposes.
     sql = """
       SELECT 
         (SELECT COUNT(*) FROM listings WHERE seller_type = 'bookstore') AS bookstore_count,
@@ -85,7 +83,7 @@ def competitor_benchmark():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# 6. Low/Out-of-Stock Alerts: Get alerts for textbooks with low inventory
+# Low/Out-of-Stock Alerts
 @bp.route('/stock-alerts', methods=['GET'])
 def stock_alerts():
     sql = 'SELECT * FROM inventory_alerts'
