@@ -114,7 +114,7 @@ import streamlit as st
 
 #### ------------------------ General ------------------------
 def HomeNav():
-    st.sidebar.page_link("Home.py", label="Home", icon="🏠")
+    st.sidebar.page_link("BookBazaar_Home.py", label="Home", icon="🏠")
 
 def AboutPageNav():
     st.sidebar.page_link("pages/30_About.py", label="About", icon="ℹ️")
@@ -123,88 +123,88 @@ def AboutPageNav():
 #### ------------------------ Buyer (Jenna the Freshman) ------------------------
 def BuyerHomeNav():
     st.sidebar.page_link(
-        "pages/00_Buyer_Home.py", label="Buyer Home", icon="👩‍🎓"
+        "pages/buyer_home.py", label="Buyer Home", icon="👩‍🎓"
     )
 
 def TextbookSearchNav():
     st.sidebar.page_link(
-        "pages/01_Buyer_TextbookSearch.py", label="Textbook Search", icon="🔍"
+        "pages/buyer_textbook_search.py", label="Textbook Search", icon="🔍"
     )
 
 def PriceAlertsNav():
     st.sidebar.page_link(
-        "pages/02_Buyer_PriceAlerts.py", label="My Price Alerts", icon="💲"
+        "pages/buyer_price_alert.py", label="My Price Alerts", icon="💲"
     )
 
 def WishlistNav():
     st.sidebar.page_link(
-        "pages/03_Buyer_Wishlist.py", label="My Wishlist", icon="📝"
+        "pages/buyer_wishlist.py", label="My Wishlist", icon="📝"
     )
 
 
 #### ------------------------ Seller (Adam the Graduating Senior) ------------------------
 def SellerHomeNav():
     st.sidebar.page_link(
-        "pages/10_Seller_Home.py", label="Seller Home", icon="🛒"
+        "pages/Seller_Home.py", label="Seller Home", icon="🛒"
     )
 
 def MyListingsNav():
     st.sidebar.page_link(
-        "pages/11_Seller_MyListings.py", label="My Listings", icon="📋"
+        "pages/Seller_MyListings.py", label="My Listings", icon="📋"
     )
 
 def PriceRecommendationNav():
     st.sidebar.page_link(
-        "pages/12_Seller_PriceRecommendation.py", label="Price Recommendation", icon="📈"
+        "pages/Seller_PriceRecommendation.py", label="Price Recommendation", icon="📈"
     )
 
 def UpdateListingNav():
     st.sidebar.page_link(
-        "pages/13_Seller_UpdateListing.py", label="Update Listing Status", icon="✏️"
+        "pages/Seller_UpdateListing.py", label="Update Listing Status", icon="✏️"
     )
 
 
 #### ------------------------ Admin (Rachel the Administrator) ------------------------
 def AdminHomeNav():
     st.sidebar.page_link(
-        "pages/20_Admin_Home.py", label="Admin Home", icon="🖥️"
+        "pages/Admin_Home.py", label="Admin Home", icon="🖥️"
     )
 
 def ReportedUsersNav():
     st.sidebar.page_link(
-        "pages/21_Admin_ReportedUsers.py", label="Reported Users", icon="🚩"
+        "pages/Admin_ReportedUsers.py", label="Reported Users", icon="🚩"
     )
 
 def FlaggedListingsNav():
     st.sidebar.page_link(
-        "pages/22_Admin_FlaggedListings.py", label="Flagged Listings", icon="⚠️"
+        "pages/Admin_FlaggedListings.py", label="Flagged Listings", icon="⚠️"
     )
 
 def SystemLogsNav():
     st.sidebar.page_link(
-        "pages/23_Admin_SystemLogs.py", label="System Logs", icon="📜"
+        "pages/Admin_SystemLogs.py", label="System Logs", icon="📜"
     )
 
 
 #### ------------------------ Bookstore Manager (Alfred) ------------------------
 def BookstoreHomeNav():
     st.sidebar.page_link(
-        "pages/30_Bookstore_Home.py", label="Bookstore Home", icon="🏫"
+        "pages/bookstore_home.py", label="Bookstore Home", icon="🏫"
     )
 
 def TrendingBooksNav():
     st.sidebar.page_link(
-        "pages/31_Bookstore_TrendingBooks.py", label="Trending Books", icon="🔥"
+        "pages/bookstore_trending_books.py", label="Trending Books", icon="🔥"
     )
 
 def PriceTrendsNav():
     st.sidebar.page_link(
-        "pages/32_Bookstore_PriceTrends.py", label="Price Trends", icon="💹"
+        "pages/bookstore_price_trends.py", label="Price Trends", icon="💹"
     )
 
 def SeasonalDemandNav():
     st.sidebar.page_link(
-        "pages/33_Bookstore_SeasonalDemand.py", label="Seasonal Demand", icon="📅"
+        "pages/bookstore_seasonal_demand.py", label="Seasonal Demand", icon="📅"
     )
 
 
@@ -220,7 +220,7 @@ def SideBarLinks(show_home: bool = False):
     # Redirect to Home if not authenticated
     if "authenticated" not in st.session_state or not st.session_state["authenticated"]:
         st.session_state["authenticated"] = False
-        st.switch_page("Home.py")
+        st.switch_page("BookBazaar_Home.py")
 
     # Optionally show Home link
     if show_home:
@@ -262,5 +262,5 @@ def SideBarLinks(show_home: bool = False):
             for key in ("authenticated", "role"):
                 if key in st.session_state:
                     del st.session_state[key]
-            st.switch_page("Home.py")
+            st.switch_page("BookBazaar_Home.py")
 
