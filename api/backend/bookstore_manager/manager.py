@@ -1,11 +1,11 @@
 # blueprints/bookstore.py
 from flask import Blueprint, jsonify
-from db import query
+from backend.db_connection import query, execute
 
-bp = Blueprint('bookstore', __name__, url_prefix='/bookstore')
+managers = Blueprint('bookstore', __name__, url_prefix='/bookstore')
 
 # Book Dashboard
-@bp.route('/trending-books', methods=['GET'])
+@managers.route('/trending-books', methods=['GET'])
 def trending_books():
     sql = """
       SELECT book_id, COUNT(*) AS total_activity
@@ -25,7 +25,7 @@ def trending_books():
         return jsonify({'error': str(e)}), 500
 
 # Price Trends 
-@bp.route('/price-trends', methods=['GET'])
+@managers.route('/price-trends', methods=['GET'])
 def price_trends():
     sql = """
       SELECT book_id, AVG(price) AS average_price
@@ -40,7 +40,7 @@ def price_trends():
         return jsonify({'error': str(e)}), 500
 
 # Demand 
-@bp.route('/seasonal-demand', methods=['GET'])
+@managers.route('/seasonal-demand', methods=['GET'])
 def seasonal_demand():
     sql = """
       SELECT strftime('%Y-%m', created_at) as month, COUNT(*) AS demand_count
@@ -55,7 +55,7 @@ def seasonal_demand():
         return jsonify({'error': str(e)}), 500
 
 #Availability 
-@bp.route('/availability-metrics', methods=['GET'])
+@managers.route('/availability-metrics', methods=['GET'])
 def availability_metrics():
     sql = """
       SELECT book_id, AVG(JULIANDAY(sold_date) - JULIANDAY(created_at)) AS avg_days_to_sell
@@ -70,7 +70,7 @@ def availability_metrics():
         return jsonify({'error': str(e)}), 500
 
 # Competitor Benchmarking
-@bp.route('/competitor-benchmark', methods=['GET'])
+@managers.route('/competitor-benchmark', methods=['GET'])
 def competitor_benchmark():
     sql = """
       SELECT 
@@ -84,7 +84,7 @@ def competitor_benchmark():
         return jsonify({'error': str(e)}), 500
 
 # Low/Out-of-Stock Alerts
-@bp.route('/stock-alerts', methods=['GET'])
+@managers.route('/stock-alerts', methods=['GET'])
 def stock_alerts():
     sql = 'SELECT * FROM inventory_alerts'
     try:

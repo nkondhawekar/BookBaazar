@@ -1,12 +1,12 @@
 # blueprints/admin.py
 from flask import Blueprint, request, jsonify, current_app
-from db import query, execute
+from backend.db import query, execute 
 import time
 
-bp = Blueprint('admin', __name__, url_prefix='/admin')
+admins = Blueprint('admin', __name__, url_prefix='/admin')
 
 # 1. View reported users (User Report Dashboard)
-@bp.route('/reports/dashboard', methods=['GET'])
+@admins.route('/reports/dashboard', methods=['GET'])
 def reported_users_dashboard():
     sql = """
        SELECT user_id, COUNT(*) AS report_count
@@ -20,7 +20,7 @@ def reported_users_dashboard():
         return jsonify({'error': str(e)}), 500
 
 # 2. View flagged listings for review
-@bp.route('/flagged-listings', methods=['GET'])
+@admins.route('/flagged-listings', methods=['GET'])
 def flagged_listings():
     sql = 'SELECT * FROM listings WHERE flagged = 1'
     try:
@@ -30,7 +30,7 @@ def flagged_listings():
         return jsonify({'error': str(e)}), 500
 
 # 3. Remove a flagged listing
-@bp.route('/flagged-listings/<int:listingId>', methods=['DELETE'])
+@admins.route('/flagged-listings/<int:listingId>', methods=['DELETE'])
 def remove_flagged_listing(listingId):
     # This might mark the listing as removed rather than deleting from DB.
     sql = 'UPDATE listings SET status = "removed" WHERE id = ?'
@@ -41,13 +41,13 @@ def remove_flagged_listing(listingId):
         return jsonify({'error': str(e)}), 500
 
 # 4. Check server health (uptime and performance)
-@bp.route('/server/health', methods=['GET'])
+@admins.route('/server/health', methods=['GET'])
 def server_health():
     uptime = time.time() - current_app.config.get('START_TIME', time.time())
     return jsonify({'status': 'Server is running', 'uptime': uptime})
 
 # 5. Ban a user who has multiple reports
-@bp.route('/users/ban', methods=['POST'])
+@admins.route('/users/ban', methods=['POST'])
 def ban_user():
     data = request.get_json()
     userId = data.get('userId')
@@ -61,7 +61,7 @@ def ban_user():
         return jsonify({'error': str(e)}), 500
 
 # 6. Detect spam or duplicate listings
-@bp.route('/spam', methods=['GET'])
+@admins.route('/spam', methods=['GET'])
 def detect_spam():
     sql = """
        SELECT title, COUNT(*) AS occurrence
@@ -76,7 +76,7 @@ def detect_spam():
         return jsonify({'error': str(e)}), 500
 
 # 7. View system logs for diagnostics
-@bp.route('/logs', methods=['GET'])
+@admins.route('/logs', methods=['GET'])
 def view_logs():
     sql = 'SELECT * FROM system_logs ORDER BY timestamp DESC'
     try:

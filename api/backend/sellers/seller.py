@@ -1,12 +1,12 @@
 # blueprints/seller.py
 from flask import Blueprint, request, jsonify
-from db import query, execute
+from backend.db_connection import query, execute
 from datetime import datetime
 
-bp = Blueprint('seller', __name__, url_prefix='/seller')
+sellers = Blueprint('seller', __name__, url_prefix='/seller')
 
 # 1. Bulk upload multiple listings for sale
-@bp.route('/listings/bulk-upload', methods=['POST'])
+@sellers.route('/listings/bulk-upload', methods=['POST'])
 def bulk_upload_listings():
     data = request.get_json()
     listings = data.get('listings')  # Expect a list of listing dicts
@@ -30,7 +30,7 @@ def bulk_upload_listings():
         return jsonify({'error': str(e)}), 500
 
 # 2. Get price recommendation for a listing based on sales data
-@bp.route('/price-recommendation/<int:listingId>', methods=['GET'])
+@sellers.route('/price-recommendation/<int:listingId>', methods=['GET'])
 def price_recommendation(listingId):
     # In a real implementation, you would query historical data to provide a recommendation.
     # Here, we return a dummy value.
@@ -42,7 +42,7 @@ def price_recommendation(listingId):
     return jsonify(recommendation)
 
 # 3. Update a listing status (e.g., mark as sold or removed)
-@bp.route('/listings/<int:listingId>', methods=['PUT'])
+@sellers.route('/listings/<int:listingId>', methods=['PUT'])
 def update_listing_status(listingId):
     data = request.get_json()
     status = data.get('status')
@@ -56,7 +56,7 @@ def update_listing_status(listingId):
         return jsonify({'error': str(e)}), 500
 
 # 4. Retrieve all listings for the seller (with average ratings, etc.)
-@bp.route('/listings', methods=['GET'])
+@sellers.route('/listings', methods=['GET'])
 def get_seller_listings():
     sellerId = request.args.get('sellerId')
     if not sellerId:
@@ -74,7 +74,7 @@ def get_seller_listings():
         return jsonify({'error': str(e)}), 500
 
 # 5. Retrieve messages for a seller’s listing
-@bp.route('/messages/<int:listingId>', methods=['GET'])
+@sellers.route('/messages/<int:listingId>', methods=['GET'])
 def get_listing_messages(listingId):
     sql = 'SELECT * FROM messages WHERE listing_id = ? ORDER BY sent_at ASC'
     try:
@@ -84,7 +84,7 @@ def get_listing_messages(listingId):
         return jsonify({'error': str(e)}), 500
 
 # 6. Retrieve listing analytics (e.g., impressions, views)
-@bp.route('/analytics', methods=['GET'])
+@sellers.route('/analytics', methods=['GET'])
 def listing_analytics():
     # Return dummy analytics data; in a real app, query your analytics/statistics table
     analytics = {
@@ -96,7 +96,7 @@ def listing_analytics():
     return jsonify(analytics)
 
 # 7. Promote a listing by paying a fee for higher visibility
-@bp.route('/promote', methods=['POST'])
+@sellers.route('/promote', methods=['POST'])
 def promote_listing():
     data = request.get_json()
     listingId = data.get('listingId')

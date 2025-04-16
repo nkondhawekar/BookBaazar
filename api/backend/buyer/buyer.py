@@ -1,13 +1,13 @@
 
 # blueprints/buyer.py
 from flask import Blueprint, request, jsonify
-from db import query, execute
+from backend.db_connection.db import query, execute
 from datetime import datetime
 
-bp = Blueprint('buyer', __name__, url_prefix='/buyer')
+buyers = Blueprint('buyer', __name__, url_prefix='/buyer')
 
 # 1. Search textbooks with optional filters (course, price, condition)
-@bp.route('/textbooks', methods=['GET'])
+@buyers.route('/textbooks', methods=['GET'])
 def search_textbooks():
     course = request.args.get('course')
     price = request.args.get('price')
@@ -30,7 +30,7 @@ def search_textbooks():
         return jsonify({'error': str(e)}), 500
 
 # 2. Create a price alert for a textbook
-@bp.route('/price-alert', methods=['POST'])
+@buyers.route('/price-alert', methods=['POST'])
 def create_price_alert():
     data = request.get_json()
     bookId = data.get('bookId')
@@ -46,7 +46,7 @@ def create_price_alert():
         return jsonify({'error': str(e)}), 500
 
 # 3. View reviews for a given seller
-@bp.route('/reviews/seller/<int:sellerId>', methods=['GET'])
+@buyers.route('/reviews/seller/<int:sellerId>', methods=['GET'])
 def get_seller_reviews(sellerId):
     sql = 'SELECT * FROM reviews WHERE seller_id = ?'
     try:
@@ -56,7 +56,7 @@ def get_seller_reviews(sellerId):
         return jsonify({'error': str(e)}), 500
 
 # 4. Submit a review for a seller
-@bp.route('/reviews', methods=['POST'])
+@buyers.route('/reviews', methods=['POST'])
 def submit_review():
     data = request.get_json()
     sellerId = data.get('sellerId')
@@ -73,7 +73,7 @@ def submit_review():
         return jsonify({'error': str(e)}), 500
 
 # 5. Add a textbook to the wishlist
-@bp.route('/wishlist', methods=['POST'])
+@buyers.route('/wishlist', methods=['POST'])
 def add_to_wishlist():
     data = request.get_json()
     userId = data.get('userId')
@@ -88,7 +88,7 @@ def add_to_wishlist():
         return jsonify({'error': str(e)}), 500
 
 # 6. Remove a textbook from the wishlist
-@bp.route('/wishlist/<int:bookId>', methods=['DELETE'])
+@buyers.route('/wishlist/<int:bookId>', methods=['DELETE'])
 def remove_from_wishlist(bookId):
     data = request.get_json()  # Alternatively, get userId from session or query param.
     userId = data.get('userId')
@@ -102,7 +102,7 @@ def remove_from_wishlist(bookId):
         return jsonify({'error': str(e)}), 500
 
 # 7. Send a message to a seller
-@bp.route('/messages', methods=['POST'])
+@buyers.route('/messages', methods=['POST'])
 def send_message():
     data = request.get_json()
     senderId = data.get('senderId')
@@ -118,7 +118,7 @@ def send_message():
         return jsonify({'error': str(e)}), 500
 
 # 8. Retrieve messages for a specific listing
-@bp.route('/messages/<int:listingId>', methods=['GET'])
+@buyers.route('/messages/<int:listingId>', methods=['GET'])
 def get_messages(listingId):
     sql = 'SELECT * FROM messages WHERE listing_id = ? ORDER BY sent_at ASC'
     try:
@@ -128,7 +128,7 @@ def get_messages(listingId):
         return jsonify({'error': str(e)}), 500
 
 # 9. Get bulk pricing information (mock endpoint to show available bulk discounts)
-@bp.route('/bulk-pricing', methods=['GET'])
+@buyers.route('/bulk-pricing', methods=['GET'])
 def bulk_pricing():
     # In a real implementation, you might run a query to see if a seller offers bulk discounts.
     # Here we provide a dummy response.
