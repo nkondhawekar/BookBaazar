@@ -1,6 +1,6 @@
 # blueprints/admin.py
 from flask import Blueprint, request, jsonify, current_app
-from backend.db import query, execute 
+from backend.db_connection.db import query, execute
 import time
 
 admins = Blueprint('admin', __name__, url_prefix='/admin')

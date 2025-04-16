@@ -114,7 +114,7 @@ import streamlit as st
 
 #### ------------------------ General ------------------------
 def HomeNav():
-    st.sidebar.page_link("BookBazaar_Home.py", label="Home", icon="🏠")
+    st.sidebar.page_link("Home.py", label="Home", icon="🏠")
 
 def AboutPageNav():
     st.sidebar.page_link("pages/30_About.py", label="About", icon="ℹ️")
@@ -215,12 +215,12 @@ def SideBarLinks(show_home: bool = False):
     """
 
     # Sidebar logo
-    st.sidebar.image("assets/bookbazar_logo.png", width=150)
+    st.sidebar.image("assets/logo.png", width=150)
 
     # Redirect to Home if not authenticated
     if "authenticated" not in st.session_state or not st.session_state["authenticated"]:
         st.session_state["authenticated"] = False
-        st.switch_page("BookBazaar_Home.py")
+        st.switch_page("Home.py")
 
     # Optionally show Home link
     if show_home:
@@ -262,5 +262,5 @@ def SideBarLinks(show_home: bool = False):
             for key in ("authenticated", "role"):
                 if key in st.session_state:
                     del st.session_state[key]
-            st.switch_page("BookBazaar_Home.py")
+            st.switch_page("Home.py")
 
