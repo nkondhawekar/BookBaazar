@@ -9,4 +9,3 @@ from pymysql import cursors
 # as a dictionary object. 
 db = MySQL(cursorclass=cursors.DictCursor)
 
-from .db import query, execute
