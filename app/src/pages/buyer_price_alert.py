@@ -6,7 +6,7 @@ st.title("My Price Alerts")
 st.write("View your current price alerts and create new ones.")
 
 # Display existing price alerts for a demo user (userId = 1)
-response = requests.get("http://localhost:5000/buyer/price-alerts")
+response = requests.get("http://localhost:4000/b/price-alerts")
 if response.status_code == 200:
     alerts = response.json()
     st.write("Existing Price Alerts:")
@@ -21,10 +21,10 @@ with st.form("price_alert_form"):
     submit_alert = st.form_submit_button("Create Price Alert")
     if submit_alert:
         payload = {"bookId": book_id, "userId": 1, "targetPrice": target_price}
-        r = requests.post("http://localhost:5000/buyer/price-alert", json=payload)
+        r = requests.post("http://localhost:4000/b/price-alert", json=payload)
         if r.status_code == 201:
             st.success("Price alert created!")
         else:
             st.error("Failed to create price alert.")
 
-st.markdown("[Back to Buyer Home](?page=00_Buyer_Home)")
+st.markdown("[Back to Buyer Home](?page=buyer_home)")

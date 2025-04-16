@@ -6,7 +6,7 @@ st.title("Price Recommendation")
 st.write("Get a suggested price for one of your listings.")
 
 # For demo, assume listingId = 1
-response = requests.get("http://localhost:5000/seller/price-recommendation/1")
+response = requests.get("http://localhost:4000/s/price-recommendation/1")
 if response.status_code == 200:
     recommendation = response.json()
     st.write(f"Listing ID: {recommendation['listingId']}")
@@ -15,4 +15,4 @@ if response.status_code == 200:
 else:
     st.error("Error fetching price recommendation.")
 
-st.markdown("[Back to Seller Home](?page=10_Seller_Home)")
+st.markdown("[Back to Seller Home](?page=Seller_Home)")

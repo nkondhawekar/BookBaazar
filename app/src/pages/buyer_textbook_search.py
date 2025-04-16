@@ -19,7 +19,7 @@ with st.form("search_form"):
         if condition:
             params["condition"] = condition
         # Call the Flask API endpoint at /textbooks
-        response = requests.get("http://localhost:5000/textbooks", params=params)
+        response = requests.get("http://localhost:4000/b/textbooks", params=params)
         if response.status_code == 200:
             textbooks = response.json()
             st.write("Search Results:")
@@ -27,4 +27,4 @@ with st.form("search_form"):
         else:
             st.error("Error searching textbooks.")
 
-st.markdown("[Back to Buyer Home](?page=00_Buyer_Home)")
+st.markdown("[Back to Buyer Home](?page=buyer_home)")

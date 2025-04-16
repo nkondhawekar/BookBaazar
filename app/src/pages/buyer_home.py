@@ -5,13 +5,13 @@ st.title("Buyer Home - Jenna the Freshman")
 st.write("Welcome, Jenna! Choose a feature to explore:")
 
 if st.button("Textbook Search"):
-    st.experimental_set_query_params(page="01_Buyer_TextbookSearch")
+    st.experimental_set_query_params(page="buyer_textbook_search")
     st.experimental_rerun()
 
 if st.button("My Price Alerts"):
-    st.experimental_set_query_params(page="02_Buyer_PriceAlerts")
+    st.experimental_set_query_params(page="buyer_price_alert")
     st.experimental_rerun()
 
 if st.button("My Wishlist"):
-    st.experimental_set_query_params(page="03_Buyer_Wishlist")
+    st.experimental_set_query_params(page="buyer_wishlist")
     st.experimental_rerun()

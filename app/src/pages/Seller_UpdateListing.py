@@ -11,10 +11,10 @@ with st.form("update_listing_form"):
     submit_update = st.form_submit_button("Update Listing")
     if submit_update:
         payload = {"status": new_status}
-        r = requests.put(f"http://localhost:5000/seller/listings/{listing_id}", json=payload)
+        r = requests.put(f"http://localhost:4000/seller/listings/{listing_id}", json=payload)
         if r.status_code == 200:
             st.success("Listing status updated!")
         else:
             st.error("Failed to update listing status.")
 
-st.markdown("[Back to Seller Home](?page=10_Seller_Home)")
+st.markdown("[Back to Seller Home](?page=Seller_Home)")
