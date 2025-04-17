@@ -1,10 +1,9 @@
-
 # blueprints/manager.py
 from flask import Blueprint, jsonify
 from backend.db_connection import db
 from pymysql.cursors import DictCursor
 
-managers = Blueprint('bookstore', __name__, url_prefix='/bookstore')
+managers = Blueprint('manager', __name__, url_prefix='/manager')  # Changed to 'manager' to match your blueprint registration
 
 # Book Dashboard
 @managers.route('/trending-books', methods=['GET'])
@@ -12,9 +11,9 @@ def trending_books():
     sql = """
       SELECT book_id, COUNT(*) AS total_activity
       FROM (
-          SELECT book_id FROM listings
+          SELECT book_id FROM Listings
           UNION ALL
-          SELECT book_id FROM wishlist
+          SELECT book_id FROM Wishlist
       ) AS combined_data
       GROUP BY book_id
       ORDER BY total_activity DESC
@@ -34,7 +33,7 @@ def trending_books():
 def price_trends():
     sql = """
       SELECT book_id, AVG(price) AS average_price
-      FROM listings
+      FROM Listings
       WHERE status = 'sold'
       GROUP BY book_id
     """
@@ -51,8 +50,8 @@ def price_trends():
 @managers.route('/seasonal-demand', methods=['GET'])
 def seasonal_demand():
     sql = """
-      SELECT DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) AS demand_count
-      FROM listings
+      SELECT DATE_FORMAT(date_listed, '%Y-%m') as month, COUNT(*) AS demand_count
+      FROM Listings
       GROUP BY month
       ORDER BY month
     """
@@ -65,14 +64,15 @@ def seasonal_demand():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-#Availability 
+# Availability 
 @managers.route('/availability-metrics', methods=['GET'])
 def availability_metrics():
     sql = """
-      SELECT book_id, AVG(DATEDIFF(sold_date, created_at)) AS avg_days_to_sell
-      FROM listings
-      WHERE status = 'sold'
-      GROUP BY book_id
+      SELECT l.book_id, AVG(DATEDIFF(s.date_purchased, l.date_listed)) AS avg_days_to_sell
+      FROM Listings l
+      JOIN SalesTransactions s ON l.listing_id = s.listing_id
+      WHERE l.status = 'sold'
+      GROUP BY l.book_id
     """
     try:
         cursor = db.get_db().cursor(DictCursor)
@@ -87,9 +87,8 @@ def availability_metrics():
 @managers.route('/competitor-benchmark', methods=['GET'])
 def competitor_benchmark():
     sql = """
-      SELECT 
-        (SELECT COUNT(*) FROM listings WHERE seller_type = 'bookstore') AS bookstore_count,
-        (SELECT COUNT(*) FROM listings WHERE seller_type = 'student') AS student_count
+      SELECT book_id, bookstore_price, student_resale_avg_price
+      FROM CompetitorBenchmarking
     """
     try:
         cursor = db.get_db().cursor(DictCursor)
@@ -103,7 +102,7 @@ def competitor_benchmark():
 # Low/Out-of-Stock Alerts
 @managers.route('/stock-alerts', methods=['GET'])
 def stock_alerts():
-    sql = 'SELECT * FROM inventory_alerts'
+    sql = 'SELECT * FROM InventoryAlerts'
     try:
         cursor = db.get_db().cursor(DictCursor)
         cursor.execute(sql)

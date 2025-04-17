@@ -1,4 +1,3 @@
-
 # blueprints/seller.py
 from flask import Blueprint, request, jsonify
 from backend.db_connection import db
@@ -12,22 +11,24 @@ sellers = Blueprint('seller', __name__, url_prefix='/seller')
 def bulk_upload_listings():
     data = request.get_json()
     listings = data.get('listings')  # Expect a list of listing dicts
+    
     if not listings or not isinstance(listings, list):
         return jsonify({'error': 'Listings data is required and must be a list.'}), 400
-    sql = 'INSERT INTO listings (seller_id, title, description, price, condition, status, created_at) VALUES (%s, %s, %s, %s, %s, %s, %s)'
+    
+    sql = 'INSERT INTO Listings (seller_id, book_id, price, status, date_listed) VALUES (%s, %s, %s, %s, %s)'
     try:
         cursor = db.get_db().cursor()
         for listing in listings:
             sellerId = listing.get('sellerId')
-            title = listing.get('title')
-            description = listing.get('description')
+            bookId = listing.get('bookId')
             price = listing.get('price')
-            condition = listing.get('condition')
-            status = listing.get('status', 'available')
-            created_at = datetime.now()
-            if not all([sellerId, title, description, price, condition]):
+            status = listing.get('status', 'active')
+            
+            if not all([sellerId, bookId, price]):
                 return jsonify({'error': 'Missing fields in one of the listings.'}), 400
-            cursor.execute(sql, [sellerId, title, description, price, condition, status, created_at])
+            
+            cursor.execute(sql, [sellerId, bookId, price, status, datetime.now()])
+        
         db.get_db().commit()
         cursor.close()
         return jsonify({'message': 'Listings uploaded successfully.'}), 201
@@ -51,9 +52,11 @@ def price_recommendation(listingId):
 def update_listing_status(listingId):
     data = request.get_json()
     status = data.get('status')
+    
     if not status:
         return jsonify({'error': 'Status is required.'}), 400
-    sql = 'UPDATE listings SET status = %s WHERE id = %s'
+    
+    sql = 'UPDATE Listings SET status = %s WHERE listing_id = %s'
     try:
         cursor = db.get_db().cursor()
         cursor.execute(sql, [status, listingId])
@@ -67,12 +70,14 @@ def update_listing_status(listingId):
 @sellers.route('/listings', methods=['GET'])
 def get_seller_listings():
     sellerId = request.args.get('sellerId')
+    
     if not sellerId:
         return jsonify({'error': 'sellerId query parameter is required.'}), 400
+    
     sql = """
-      SELECT l.*,
-             (SELECT AVG(r.rating) FROM reviews r WHERE r.listing_id = l.id) AS average_rating
-      FROM listings l
+      SELECT l.*, t.title, t.author, t.isbn, t.class_code, t.`condition`
+      FROM Listings l
+      JOIN Textbooks t ON l.book_id = t.book_id
       WHERE l.seller_id = %s
     """
     try:
@@ -87,7 +92,7 @@ def get_seller_listings():
 # 5. Retrieve messages for a seller's listing
 @sellers.route('/messages/<int:listingId>', methods=['GET'])
 def get_listing_messages(listingId):
-    sql = 'SELECT * FROM messages WHERE listing_id = %s ORDER BY sent_at ASC'
+    sql = 'SELECT * FROM Messages WHERE listing_id = %s ORDER BY timestamp ASC'
     try:
         cursor = db.get_db().cursor(DictCursor)
         cursor.execute(sql, [listingId])
@@ -98,29 +103,47 @@ def get_listing_messages(listingId):
         return jsonify({'error': str(e)}), 500
 
 # 6. Retrieve listing analytics (e.g., impressions, views)
-@sellers.route('/analytics', methods=['GET'])
-def listing_analytics():
-    # Return dummy analytics data; in a real app, query your analytics/statistics table
-    analytics = {
-        "total_impressions": 150,
-        "total_views": 80,
-        "most_viewed_listing": 123,
-        "message": "Analytics data retrieved successfully."
-    }
-    return jsonify(analytics)
+@sellers.route('/analytics/<int:listingId>', methods=['GET'])
+def listing_analytics(listingId):
+    sql = 'SELECT * FROM ListingAnalytics WHERE listing_id = %s'
+    try:
+        cursor = db.get_db().cursor(DictCursor)
+        cursor.execute(sql, [listingId])
+        analytics = cursor.fetchone()
+        cursor.close()
+        
+        if analytics:
+            return jsonify(analytics)
+        else:
+            return jsonify({
+                "listing_id": listingId,
+                "total_views": 0,
+                "clicks": 0,
+                "last_updated": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 # 7. Promote a listing by paying a fee for higher visibility
 @sellers.route('/promote', methods=['POST'])
 def promote_listing():
     data = request.get_json()
     listingId = data.get('listingId')
+    days = data.get('days', 7)  # Default promotion period: 7 days
+    cost = data.get('cost', 5.00)  # Default cost: $5.00
+    
     if not listingId:
         return jsonify({'error': 'Listing ID is required.'}), 400
-    # In a real implementation, update the listing to mark it for promotion and process payment.
-    sql = 'UPDATE listings SET promoted = %s WHERE id = %s'
+    
+    sql = '''
+        INSERT INTO Promotions (listing_id, start_date, end_date, cost) 
+        VALUES (%s, %s, DATE_ADD(%s, INTERVAL %s DAY), %s)
+    '''
+    now = datetime.now()
+    
     try:
         cursor = db.get_db().cursor()
-        cursor.execute(sql, [1, listingId])
+        cursor.execute(sql, [listingId, now, now, days, cost])
         db.get_db().commit()
         cursor.close()
         return jsonify({'message': 'Listing promoted successfully.'})

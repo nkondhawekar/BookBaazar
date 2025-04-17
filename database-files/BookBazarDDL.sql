@@ -10,7 +10,8 @@ CREATE TABLE Users (
     phone_number VARCHAR(15),
     role ENUM('buyer', 'seller', 'admin', 'bookstore_manager') NOT NULL,
     total_sales INT DEFAULT 0,
-    rating FLOAT DEFAULT 0.0
+    rating FLOAT DEFAULT 0.0,
+    banned BOOLEAN DEFAULT 0
 );
 
 CREATE TABLE Textbooks (
@@ -140,7 +141,7 @@ CREATE TABLE Reports (
 );
 
 
-CREATE TABLE ServerHealth (
+CREATE TABLE Server (
     server_id INT PRIMARY KEY AUTO_INCREMENT,
     server_name VARCHAR(100),
     uptime_percentage DECIMAL(5,2),
@@ -161,6 +162,6 @@ CREATE TABLE CompetitorBenchmarking (
 CREATE TABLE InventoryAlerts (
     alert_id INT PRIMARY KEY AUTO_INCREMENT,
     book_id INT,
-    stock_status ENUM('low', 'out of stock'),
+    stock_status ENUM('low', 'out of stock', 'in stock'),
     FOREIGN KEY (book_id) REFERENCES Textbooks(book_id)
 );

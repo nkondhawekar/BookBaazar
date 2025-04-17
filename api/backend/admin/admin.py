@@ -1,4 +1,3 @@
-
 # blueprints/admin.py
 from flask import Blueprint, request, jsonify, current_app
 from backend.db_connection import db
@@ -11,9 +10,9 @@ admins = Blueprint('admin', __name__, url_prefix='/admin')
 @admins.route('/reports/dashboard', methods=['GET'])
 def reported_users_dashboard():
     sql = """
-       SELECT user_id, COUNT(*) AS report_count
-       FROM user_reports
-       GROUP BY user_id
+       SELECT reported_user_id AS user_id, COUNT(*) AS report_count
+       FROM Reports
+       GROUP BY reported_user_id
     """
     try:
         cursor = db.get_db().cursor(DictCursor)
@@ -41,7 +40,7 @@ def flagged_listings():
 @admins.route('/flagged-listings/<int:listingId>', methods=['DELETE'])
 def remove_flagged_listing(listingId):
     # This might mark the listing as removed rather than deleting from DB.
-    sql = 'UPDATE Listings SET status = %s WHERE id = %s'
+    sql = 'UPDATE Listings SET status = %s WHERE listing_id = %s'
     try:
         cursor = db.get_db().cursor()
         cursor.execute(sql, ["removed", listingId])
@@ -64,7 +63,7 @@ def ban_user():
     userId = data.get('userId')
     if not userId:
         return jsonify({'error': 'userId is required.'}), 400
-    sql = 'UPDATE users SET banned = %s WHERE id = %s'
+    sql = 'UPDATE Users SET banned = %s WHERE user_id = %s'
     try:
         cursor = db.get_db().cursor()
         cursor.execute(sql, [1, userId])
@@ -78,9 +77,10 @@ def ban_user():
 @admins.route('/spam', methods=['GET'])
 def detect_spam():
     sql = """
-       SELECT title, COUNT(*) AS occurrence
-       FROM listings
-       GROUP BY title
+       SELECT t.title, COUNT(*) AS occurrence
+       FROM Listings l
+       JOIN Textbooks t ON l.book_id = t.book_id
+       GROUP BY t.title
        HAVING occurrence > 1
     """
     try:
@@ -95,7 +95,7 @@ def detect_spam():
 # 7. View system logs for diagnostics
 @admins.route('/logs', methods=['GET'])
 def view_logs():
-    sql = 'SELECT * FROM system_logs ORDER BY timestamp DESC'
+    sql = 'SELECT * FROM SystemLogs ORDER BY timestamp DESC'
     try:
         cursor = db.get_db().cursor(DictCursor)
         cursor.execute(sql)
