@@ -11,7 +11,7 @@ SideBarLinks(show_home=True)
 
 with st.form("update_listing_form"):
     listing_id = st.text_input("Listing ID")
-    new_status = st.selectbox("New Status", ["sold", "removed", "available"])
+    new_status = st.selectbox("New Status", ["sold", "active", "removed"])
     submit_update = st.form_submit_button("Update Listing")
     if submit_update:
         try:

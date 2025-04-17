@@ -12,7 +12,7 @@ SideBarLinks(show_home=True)
 with st.form("search_form"):
     course = st.text_input("Course Code")
     price = st.text_input("Maximum Price")
-    condition = st.selectbox("Condition", ["", "New", "Used", "Acceptable"])
+    condition = st.selectbox("Condition", ["", "Fair", "Good", "Like New"])
     submitted = st.form_submit_button("Search")
     if submitted:
         params = {}
