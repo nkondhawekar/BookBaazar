@@ -145,11 +145,8 @@ def SideBarLinks(show_home: bool = False):
             st.sidebar.page_link("pages/bookstore_price_trends.py", label="Price Trends", icon="💹")
             st.sidebar.page_link("pages/bookstore_seasonal_demand.py", label="Seasonal Demand", icon="📅")
 
-    # Always show About link at bottom if it exists
-    try:
-        st.sidebar.page_link("pages/About.py", label="About", icon="ℹ️")
-    except:
-        pass
+    # Always show About link at bottom
+    st.sidebar.page_link("pages/About.py", label="About", icon="ℹ️")
 
     # Logout button (only show if authenticated)
     if st.session_state.get("authenticated", False):
