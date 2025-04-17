@@ -12,18 +12,7 @@ SideBarLinks(show_home=True)
 # Use try/except to handle API errors gracefully
 try:
     params = {"sellerId": 1}  # For demo, assume sellerId 1
-    
-    # Try connecting to the API
-    # First try with web-api hostname (container-to-container communication)
-    try:
-        response = requests.get("http://api:4000/s/listings", params=params, timeout=3)
-    except requests.exceptions.ConnectionError:
-        # If that fails, try with api service name
-        try:
-            response = requests.get("http://api:4000/s/listings", params=params, timeout=3)
-        except requests.exceptions.ConnectionError:
-            # If that fails too, fall back to localhost
-            response = requests.get("http://localhost:4000/s/listings", params=params, timeout=5)
+    response = requests.get("http://api:4000/s/listings", params=params, timeout=5)
     
     if response.status_code == 200:
         listings = response.json()
@@ -32,7 +21,6 @@ try:
         st.error(f"Error fetching listings. Status code: {response.status_code}")
 except requests.exceptions.ConnectionError:
     st.error("Could not connect to the API server. Please make sure the server is running.")
-    st.info("Debug info: The web-app container can't reach the API container. Check your Docker network configuration.")
 except Exception as e:
     st.error(f"An error occurred: {str(e)}")
 
