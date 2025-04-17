@@ -1,6 +1,6 @@
 # Book Bazaar: A Campus Textbook Marketplace
 
-Book Bazaar is a peer-to-peer textbook marketplace designed specifically for college students. Our mission is to make textbooks more affordable and accessible by connecting buyers and sellers directly within the campus community.
+Book Bazaar is a peer-to-peer textbook marketplace designed specifically for college students by Richard Ferrentino, Pranav Thamil, Arvind Narayan, and Nikita Kondhawekar. Our mission is to make textbooks more affordable and accessible by connecting buyers and sellers directly within the campus community.
 
 ## Project Components
 
