@@ -1,3 +1,5 @@
+USE TextbookMarketplace;
+
 -- Users data (40 rows - strong entity)
 INSERT INTO Users (name, email, phone_number, role, total_sales, rating) VALUES
 ('John Doe', 'john@example.com', '9876543210', 'buyer', 0, 0.0),

@@ -29,6 +29,7 @@ CREATE TABLE Listings (
     price DECIMAL(10,2) NOT NULL,
     status ENUM('active', 'sold', 'removed') DEFAULT 'active',
     date_listed DATETIME DEFAULT CURRENT_TIMESTAMP,
+    flagged BOOLEAN DEFAULT 0,
     FOREIGN KEY (seller_id) REFERENCES Users(user_id),
     FOREIGN KEY (book_id) REFERENCES Textbooks(book_id)
 );

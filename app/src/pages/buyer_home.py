@@ -1,17 +1,21 @@
 import streamlit as st
+from modules.nav import SideBarLinks
 
 st.set_page_config(page_title="Buyer Home", layout="wide")
 st.title("Buyer Home - Jenna the Freshman")
 st.write("Welcome, Jenna! Choose a feature to explore:")
 
+# Add sidebar
+SideBarLinks(show_home=True)
+
 if st.button("Textbook Search"):
-    st.experimental_set_query_params(page="buyer_textbook_search")
-    st.experimental_rerun()
+    st.switch_page("pages/buyer_textbook_search.py")
 
 if st.button("My Price Alerts"):
-    st.experimental_set_query_params(page="buyer_price_alert")
-    st.experimental_rerun()
+    st.switch_page("pages/buyer_price_alert.py")
 
 if st.button("My Wishlist"):
-    st.experimental_set_query_params(page="buyer_wishlist")
-    st.experimental_rerun()
+    st.switch_page("pages/buyer_wishlist.py")
+
+if st.button("Return to Home"):
+    st.switch_page("Home.py")
