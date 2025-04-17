@@ -75,3 +75,5 @@ Book Bazaar implements a role-based access control system using Streamlit's sess
 ## Database Schema
 
 The application uses a MySQL database with tables for Users, Textbooks, Listings, Transactions, Messages, and more. See the `BookBazarDDL.sql` file for the complete database schema.
+
+Video Demonstration: https://northeastern-my.sharepoint.com/:v:/g/personal/thamil_p_northeastern_edu/ETQX-q1h2QdGsBibOxRGwWoBvVg_DahwM8YkoJWMyNpjHA?e=PtU2lh&nav=eyJwbGF5YmFja09wdGlvbnMiOnt9LCJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbE1vZGUiOiJtaXMiLCJyZWZlcnJhbFZpZXciOiJwb3N0cm9sbC1jb3B5bGluayIsInJlZmVycmFsUGxheWJhY2tTZXNzaW9uSWQiOiJiYzMyMjNjNC1iMjhmLTQxNzUtYTY0ZS0zODlmYmI4MDEwZmEifX0%3D
